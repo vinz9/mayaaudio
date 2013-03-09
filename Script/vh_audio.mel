@@ -1,0 +1,47 @@
+global proc cubesEq() {
+	string $audioFile = `sound -file "C:/b.wav" -offset 0`;
+	
+	string $audioNodeName = `createNode audioNode`;
+	connectAttr time1.outTime ($audioNodeName+".inTime");
+	
+	connectAttr ($audioFile+".filename") ($audioNodeName+".filePath");
+	connectAttr ($audioFile+".offset") ($audioNodeName+".offset");
+	
+	int $i;
+	
+	for ($i = 0; $i<32; $i++) {
+		int $a = $i + 1;
+		float $t = $i*0.25;
+		polyCube -n ("monCube"+$a);
+		setAttr ("monCube"+$a+".translateY") ($t);
+		setAttr ("monCube"+$a+".scaleY") 0.25;
+		connectAttr ($audioNodeName+".fftOut["+$i+"]") ("monCube"+$a+".scaleX");
+		connectAttr ($audioNodeName+".fftOut["+$i+"]") ("monCube"+$a+".scaleZ");
+	}
+	
+}
+
+global proc eqNurbsProc() {
+	string $audioFile = `sound -file "C:/b.wav" -offset 0`;
+	
+	string $audioNodeName = `createNode audioNode`;
+	connectAttr time1.outTime ($audioNodeName+".inTime");
+	
+	connectAttr ($audioFile+".filename") ($audioNodeName+".filePath");
+	connectAttr ($audioFile+".offset") ($audioNodeName+".offset");
+	
+	createNode eqNurbsNode;
+	
+	/*int $i;
+	for ($i = 0; $i<32; $i++) {
+	connectAttr -f ($audioNodeName+".fftOut["+$i+"]") ("eqNurbsNode1.inFFT["+$i+"]");
+	
+	}*/
+	
+	connectAttr -f ($audioNodeName+".outFFTcompact") eqNurbsNode1.inFFTcompact;
+	
+	createNode nurbsCurve;
+	connectAttr -f eqNurbsNode1.outCurve curveShape1.create;
+	revolve  -ch 1 -ax 0 1 0 "curve1";
+	
+}
