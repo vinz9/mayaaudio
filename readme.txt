@@ -32,7 +32,7 @@ Not much error checking is done, so save your file before using the plugin, it c
 
 
 
-04/08/2013
+04/08/2013 : version 0.92
 12/09/2012 : version 0.91 : compiled for Maya 2011/2012/2013
 19/04/2009 : version 0.9 : initial (and probably last) public release, after more than one year sitting on my hard drive
 
